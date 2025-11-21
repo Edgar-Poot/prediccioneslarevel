@@ -33,6 +33,86 @@
         (con ph=7.0, ce=1.5, turbidez=4.0)
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Valores inyectados desde PHP
+        const ph = <?= json_encode($ph) ?>;
+        const ce = <?= json_encode($ce) ?>;
+        const turb = <?= json_encode($turb) ?>;
+        const prediccion = <?= $prediccion ?>;
+        document.getElementById("valorPrediccion").innerText = prediccion;
+
+        // Etiquetas para 40 minutos + último punto "Pred."
+        const labels = [
+            //operador spread o de propagación
+            ...Array.from({
+                length: ph.length
+            }, (_, i) => (i + 1) + " min"),
+            "Pred."
+        ];
+        // Datos sin unir con predicción
+        const datosPh = [...ph, null];
+        const datosCe = [...ce, null];
+        const datosTurb = [...turb, null];
+
+        // Predicción aislada
+        const datosPrediccion = Array(ph.length).fill(null);
+        datosPrediccion.push(prediccion);
+
+        // ------------------- FUNCION PARA CREAR LA GRAFICA -------------------
+        let chart; // variable global
+
+        function crearGrafica(tipo = 'line') {
+            const ctx = document.getElementById('graficaComparativa').getContext('2d');
+
+            if (chart) chart.destroy(); // destruir gráfico previo
+
+            chart = new Chart(ctx, {
+                type: tipo,
+                data: {
+                    labels,
+                    datasets: [{
+                            label: 'pH',
+                            data: datosPh,
+                            borderColor: 'rgba(54, 162, 235)',
+                            backgroundColor: '#36A2EB',
+                            tension: 0.3
+                        },
+                        {
+                            label: 'CE',
+                            data: datosCe,
+                            borderColor: 'rgba(255, 159, 64)',
+                            backgroundColor: '#FF9F40',
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Turbidez',
+                            data: datosTurb,
+                            borderColor: 'rgba(153, 102, 255)',
+                            backgroundColor: '#9966FF',
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Predicción (Calidad)',
+                            data: datosPrediccion,
+                            borderColor: 'rgba(75, 192, 192)',
+                            backgroundColor: '#FF6384',
+                            pointRadius: 8,
+                            pointStyle: 'circle',
+                            showLine: false
+                        }
+                    ]
+                }
+            });
+        }
+
+        // Cambiar tipo de gráfico
+        function cambiarTipo(nuevoTipo) {
+            crearGrafica(nuevoTipo);
+        }
+
+        // Crear la gráfica inicial (lineal)
+        crearGrafica('line');
+    </script>
 </body>
 
 </html>
