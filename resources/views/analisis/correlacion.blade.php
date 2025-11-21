@@ -16,6 +16,22 @@
             <button class="btn btn-primary" onclick="cambiarTipo('radar')">grafico radar</button>
         </div>
     </div>
+    <!-- GRÁFICA -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">Predicción calidad del agua</div>
+        <div class="card-body">
+            <div class="chart-container" style="position: relative; height: 85vh; width: 100%;">
+                <canvas id="graficaComparativa"></canvas>
+            </div>
+        </div>
+    </div>
+    <!--Valores que mandamos en el controlador-->
+    <div class="alert alert-info">
+        <strong>Predicción generada:</strong><br>
+        Calidad esperada =
+        <strong id="valorPrediccion"><?= $prediccion ?></strong><br>
+        (con ph=7.0, ce=1.5, turbidez=4.0)
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 
